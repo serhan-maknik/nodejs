@@ -1,9 +1,16 @@
-const http = require('http');
 const express = require('express');
 const aktorlerRouter = require('./routers/aktorlerRouter')
 
+let data = require('./data')
+
+const logger = require('./middlewares/logger')
+
 const server = express();
+
 server.use(express.json())
+
+server.use(logger)
+
 server.use('/aktorler', aktorlerRouter)
 
 server.get('/', (req, res) => {
