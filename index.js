@@ -1,6 +1,6 @@
 const express = require('express');
 const aktorlerRouter = require('./routers/aktorlerRouter')
-
+const Aktor = require('./data/data-model')
 let data = require('./data')
 
 const logger = require('./middlewares/logger')
@@ -21,13 +21,19 @@ server.get('/', (req, res) => {
 
 let count = 4
 server.post("/post", (req, res, next) => {
-    let datas = req.body
+    const datas = req.body
+    console.log("HANANANA: ", datas)
     if (datas.isim) {
-        datas.id = count;
-        data.push(datas);
-        count++;
-        console.log("cevap: ", data)
-        res.send(data);
+        Aktor.addAktor(datas)
+            .then(aktor => res.send(aktor))
+            .catch(error => {
+                next({
+                    error,
+                    statusCode: 501,
+                    errorMessage: "Ekleyemedik",
+                })
+            })
+
     } else {
         next({
             statusCode: 400,
